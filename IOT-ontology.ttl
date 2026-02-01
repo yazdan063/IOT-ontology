@@ -11,8 +11,8 @@
     owl:imports <http://www.w3.org/ns/sosa/> ,
                 <http://www.w3.org/ns/ssn/> ;
     rdfs:label "Smart Home IoT Ontology" ;
-    rdfs:comment "A comprehensive Smart Home/IoT Ontology based on SOSA/SSN patterns with enhanced scalability by "Yazdan Bayat nezhad" for "knowledge Representation" course" ;
-    owl:versionInfo "2.2-fixed" .
+    rdfs:comment "A comprehensive Smart Home/IoT Ontology based on SOSA/SSN patterns with enhanced scalability (author: Yazdan Bayat Nezhad) for the Knowledge Representation course." ;
+    owl:versionInfo "2.3-extended" .
 
 ## 1. Enhanced Class Hierarchy with Proper SSN Alignment
 
@@ -621,3 +621,576 @@
 # Rule 3: Infer device connectivity through common platform
 # [Device(?d1), Device(?d2), Platform(?p), isHostedBy(?d1, ?p),
 #  isHostedBy(?d2, ?p) -> connectedTo(?d1, ?d2)]
+
+
+## 10. Additional Core Concepts (Occupants, Network, Automation, Alerts)
+
+# Occupants / Users
+:Occupant rdf:type owl:Class ;
+    rdfs:label "Occupant" ;
+    rdfs:comment "A person who lives in or uses the smart home." .
+
+:Guest rdf:type owl:Class ;
+    rdfs:subClassOf :Occupant ;
+    rdfs:label "Guest" .
+
+:Resident rdf:type owl:Class ;
+    rdfs:subClassOf :Occupant ;
+    rdfs:label "Resident" .
+
+# Network / Edge Infrastructure
+:NetworkDevice rdf:type owl:Class ;
+    rdfs:subClassOf :CompositeDevice ;
+    rdfs:label "Network Device" ;
+    rdfs:comment "Infrastructure device for connectivity (router, hub, gateway)." .
+
+:Router rdf:type owl:Class ;
+    rdfs:subClassOf :NetworkDevice ;
+    rdfs:label "Router" .
+
+:IoTHub rdf:type owl:Class ;
+    rdfs:subClassOf :NetworkDevice ;
+    rdfs:label "IoT Hub" ;
+    rdfs:comment "Coordinator/hub for smart home devices (Zigbee/Z-Wave/Thread, etc.)." .
+
+:VoiceAssistant rdf:type owl:Class ;
+    rdfs:subClassOf :NetworkDevice ;
+    rdfs:label "Voice Assistant" ;
+    rdfs:comment "Voice-controlled platform that can host skills/integrations." .
+
+# Additional Spatial Types
+:OutdoorArea rdf:type owl:Class ;
+    rdfs:subClassOf :Structure ;
+    rdfs:label "Outdoor Area" .
+
+:Garden rdf:type owl:Class ;
+    rdfs:subClassOf :OutdoorArea ;
+    rdfs:label "Garden" .
+
+:Garage rdf:type owl:Class ;
+    rdfs:subClassOf :Room ;
+    rdfs:label "Garage" .
+
+:Hallway rdf:type owl:Class ;
+    rdfs:subClassOf :Room ;
+    rdfs:label "Hallway" .
+
+# Additional Sensors
+:SafetySensor rdf:type owl:Class ;
+    rdfs:subClassOf :EnvironmentalSensor ;
+    rdfs:label "Safety Sensor" .
+
+:CarbonMonoxideDetector rdf:type owl:Class ;
+    rdfs:subClassOf :SafetySensor ;
+    rdfs:label "Carbon Monoxide Detector" .
+
+:GasLeakDetector rdf:type owl:Class ;
+    rdfs:subClassOf :SafetySensor ;
+    rdfs:label "Gas Leak Detector" .
+
+:EnergyMeter rdf:type owl:Class ;
+    rdfs:subClassOf :EnergySensor ;
+    rdfs:label "Energy Meter" ;
+    rdfs:comment "Measures overall household electricity consumption (and optionally production)." .
+
+# Additional Actuators
+:PowerActuator rdf:type owl:Class ;
+    rdfs:subClassOf :ActuatingDevice ;
+    rdfs:label "Power Actuator" ;
+    rdfs:comment "Controls power delivery to a circuit/device (e.g., smart plug)." .
+
+:SmartPlug rdf:type owl:Class ;
+    rdfs:subClassOf :PowerActuator ;
+    rdfs:label "Smart Plug" .
+
+:ShadingActuator rdf:type owl:Class ;
+    rdfs:subClassOf :ActuatingDevice ;
+    rdfs:label "Shading Actuator" .
+
+:SmartBlind rdf:type owl:Class ;
+    rdfs:subClassOf :ShadingActuator ;
+    rdfs:label "Smart Blind" .
+
+:IrrigationValve rdf:type owl:Class ;
+    rdfs:subClassOf :ActuatingDevice ;
+    rdfs:label "Irrigation Valve" .
+
+:SmartLight rdf:type owl:Class ;
+    rdfs:subClassOf :LightingActuator ;
+    rdfs:label "Smart Light" .
+
+# Alerts / Notifications
+:Alert rdf:type owl:Class ;
+    rdfs:label "Alert" ;
+    rdfs:comment "A detected situation that should be reported or acted upon." .
+
+:SecurityAlert rdf:type owl:Class ;
+    rdfs:subClassOf :Alert ;
+    rdfs:label "Security Alert" .
+
+:FireAlert rdf:type owl:Class ;
+    rdfs:subClassOf :Alert ;
+    rdfs:label "Fire Alert" .
+
+:LeakAlert rdf:type owl:Class ;
+    rdfs:subClassOf :Alert ;
+    rdfs:label "Leak Alert" .
+
+:COAlert rdf:type owl:Class ;
+    rdfs:subClassOf :Alert ;
+    rdfs:label "Carbon Monoxide Alert" .
+
+:Notification rdf:type owl:Class ;
+    rdfs:label "Notification" ;
+    rdfs:comment "A message delivered to an occupant (push, SMS, email, siren)." .
+
+# Simple Automation Model (lightweight)
+:AutomationRule rdf:type owl:Class ;
+    rdfs:label "Automation Rule" ;
+    rdfs:comment "A basic automation rule connecting events/conditions to actions." .
+
+:Condition rdf:type owl:Class ;
+    rdfs:label "Condition" .
+
+:Action rdf:type owl:Class ;
+    rdfs:label "Action" .
+
+
+## 11. Additional Object Properties
+
+:hasOccupant rdf:type owl:ObjectProperty ;
+    rdfs:domain :Building ;
+    rdfs:range :Occupant ;
+    rdfs:label "has occupant" .
+
+:occupies rdf:type owl:ObjectProperty ;
+    rdfs:domain :Occupant ;
+    rdfs:range :Room ;
+    rdfs:label "occupies" ;
+    rdfs:comment "Relates an occupant to the room they are currently in (presence)." .
+
+:hasGateway rdf:type owl:ObjectProperty ;
+    rdfs:domain :Building ;
+    rdfs:range :NetworkDevice ;
+    rdfs:label "has gateway" .
+
+:managedByHub rdf:type owl:ObjectProperty ;
+    rdfs:domain :Device ;
+    rdfs:range :IoTHub ;
+    rdfs:label "managed by hub" .
+
+:triggersAlert rdf:type owl:ObjectProperty ;
+    rdfs:domain sosa:Observation ;
+    rdfs:range :Alert ;
+    rdfs:label "triggers alert" .
+
+:generatesNotification rdf:type owl:ObjectProperty ;
+    rdfs:domain :Alert ;
+    rdfs:range :Notification ;
+    rdfs:label "generates notification" .
+
+:sentTo rdf:type owl:ObjectProperty ;
+    rdfs:domain :Notification ;
+    rdfs:range :Occupant ;
+    rdfs:label "sent to" .
+
+:hasRule rdf:type owl:ObjectProperty ;
+    rdfs:domain :Building ;
+    rdfs:range :AutomationRule ;
+    rdfs:label "has rule" .
+
+:hasCondition rdf:type owl:ObjectProperty ;
+    rdfs:domain :AutomationRule ;
+    rdfs:range :Condition ;
+    rdfs:label "has condition" .
+
+:hasAction rdf:type owl:ObjectProperty ;
+    rdfs:domain :AutomationRule ;
+    rdfs:range :Action ;
+    rdfs:label "has action" .
+
+:targetsDevice rdf:type owl:ObjectProperty ;
+    rdfs:domain :Action ;
+    rdfs:range :Device ;
+    rdfs:label "targets device" .
+
+
+## 12. Additional Data Properties
+
+:hasPhoneNumber rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Occupant ;
+    rdfs:range xsd:string ;
+    rdfs:label "has phone number" .
+
+:hasEmail rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Occupant ;
+    rdfs:range xsd:string ;
+    rdfs:label "has email" .
+
+:notificationChannel rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Notification ;
+    rdfs:range xsd:string ;
+    rdfs:label "notification channel" ;
+    rdfs:comment "e.g., push, sms, email, siren" .
+
+:messageText rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Notification ;
+    rdfs:range xsd:string ;
+    rdfs:label "message text" .
+
+:isEnabled rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:domain :AutomationRule ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is enabled" .
+
+:rulePriority rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:domain :AutomationRule ;
+    rdfs:range xsd:integer ;
+    rdfs:label "rule priority" .
+
+:thresholdValue rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Condition ;
+    rdfs:range xsd:float ;
+    rdfs:label "threshold value" .
+
+:comparisonOperator rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Condition ;
+    rdfs:range xsd:string ;
+    rdfs:label "comparison operator" ;
+    rdfs:comment "e.g., >, >=, =, <=, <" .
+
+
+## 13. Additional Observable / Actuatable Property Classes
+
+:SmokeConcentrationProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ObservableProperty , sosa:Property ;
+    rdfs:label "Smoke Concentration Property" .
+
+:CarbonMonoxideConcentrationProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ObservableProperty , sosa:Property ;
+    rdfs:label "Carbon Monoxide Concentration Property" .
+
+:GasLeakConcentrationProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ObservableProperty , sosa:Property ;
+    rdfs:label "Gas Leak Concentration Property" .
+
+:BlindPositionProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ActuatableProperty , sosa:Property ;
+    rdfs:label "Blind Position Property" ;
+    rdfs:comment "0..100% open" .
+
+:PowerSwitchProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ActuatableProperty , sosa:Property ;
+    rdfs:label "Power Switch Property" ;
+    rdfs:comment "On/Off switching" .
+
+
+## 14. Extended Instantiation (More Rooms, Devices, Observations, Alerts, Automation)
+
+# More rooms (ensure each Room has at least one aperture)
+:MyBedroom rdf:type :Bedroom ;
+    rdfs:label "Main Bedroom" ;
+    :isPartOf :MainFloor .
+
+:MyBathroom rdf:type :Bathroom ;
+    rdfs:label "Main Bathroom" ;
+    :isPartOf :MainFloor .
+
+:MyHallway rdf:type :Hallway ;
+    rdfs:label "Hallway" ;
+    :isPartOf :MainFloor .
+
+:MyGarage rdf:type :Garage ;
+    rdfs:label "Garage" ;
+    :isPartOf :MyHome .
+
+:MyGarden rdf:type :Garden ;
+    rdfs:label "Garden" ;
+    :isPartOf :MyHome .
+
+# Apertures for new rooms
+:BedroomWindow rdf:type :Window ;
+    rdfs:label "Bedroom Window" ;
+    :isApertureOf :MyBedroom .
+
+:BathroomWindow rdf:type :Window ;
+    rdfs:label "Bathroom Window" ;
+    :isApertureOf :MyBathroom .
+
+:GarageDoor rdf:type :Door ;
+    rdfs:label "Garage Door" ;
+    :isApertureOf :MyGarage .
+
+:MyBedroom :hasAperture :BedroomWindow .
+:MyBathroom :hasAperture :BathroomWindow .
+:MyGarage :hasAperture :GarageDoor .
+
+# Occupants
+:Mohammad rdf:type :Resident ;
+    rdfs:label "Mohammad" ;
+    :hasEmail "mohammad@example.com" ;
+    :hasPhoneNumber "+39-000-000-000" .
+
+:Guest1 rdf:type :Guest ;
+    rdfs:label "Guest 1" .
+
+:MyHome :hasOccupant :Mohammad , :Guest1 .
+
+# Presence examples
+:Mohammad :occupies :MyLivingRoom .
+
+# Network / hub devices
+:MainRouter1 rdf:type :Router ;
+    rdfs:label "Main Wi-Fi Router" ;
+    :deviceLocatedIn :MyLivingRoom ;
+    :hasManufacturer "AVM" ;
+    :hasModel "FRITZ!Box" ;
+    :hasPowerState "ON"^^xsd:string ;
+    :isOperational "true"^^xsd:boolean .
+
+:HomeHub1 rdf:type :IoTHub ;
+    rdfs:label "Home IoT Hub" ;
+    :deviceLocatedIn :MyLivingRoom ;
+    :hasManufacturer "HomeAssistant" ;
+    :hasModel "Green" ;
+    :hasPowerState "ON"^^xsd:string ;
+    :isOperational "true"^^xsd:boolean .
+
+:VoiceAssistant1 rdf:type :VoiceAssistant ;
+    rdfs:label "Voice Assistant" ;
+    :deviceLocatedIn :MyKitchen ;
+    :hasManufacturer "Amazon" ;
+    :hasModel "Echo" ;
+    :hasPowerState "ON"^^xsd:string ;
+    :isOperational "true"^^xsd:boolean .
+
+:MyHome :hasGateway :MainRouter1 , :HomeHub1 .
+
+# Critical safety sensors
+:KitchenSmokeDetector rdf:type :SmokeDetector ;
+    rdfs:label "Kitchen Smoke Detector" ;
+    :deviceLocatedIn :MyKitchen ;
+    :managedByHub :HomeHub1 ;
+    :hasPowerState "ON"^^xsd:string ;
+    :isOperational "true"^^xsd:boolean ;
+    sosa:observes :KitchenSmokeProperty .
+
+:KitchenSmokeProperty rdf:type :SmokeConcentrationProperty ;
+    rdfs:label "Kitchen Smoke Concentration" .
+
+:GarageCODetector rdf:type :CarbonMonoxideDetector ;
+    rdfs:label "Garage CO Detector" ;
+    :deviceLocatedIn :MyGarage ;
+    :managedByHub :HomeHub1 ;
+    :hasPowerState "ON"^^xsd:string ;
+    :isOperational "true"^^xsd:boolean ;
+    sosa:observes :GarageCOProperty .
+
+:GarageCOProperty rdf:type :CarbonMonoxideConcentrationProperty ;
+    rdfs:label "Garage CO Concentration" .
+
+:BathroomLeakDetector rdf:type :LeakDetector ;
+    rdfs:label "Bathroom Leak Detector" ;
+    :deviceLocatedIn :MyBathroom ;
+    :managedByHub :HomeHub1 ;
+    :hasPowerState "ON"^^xsd:string ;
+    :isOperational "true"^^xsd:boolean ;
+    sosa:observes :BathroomLeakProperty .
+
+:BathroomLeakProperty rdf:type :ContactStateProperty ;
+    rdfs:label "Bathroom Leak State" .
+
+# Energy monitoring
+:MainEnergyMeter rdf:type :EnergyMeter ;
+    rdfs:label "Main Energy Meter" ;
+    :deviceLocatedIn :MyHallway ;
+    :managedByHub :HomeHub1 ;
+    :hasPowerState "ON"^^xsd:string ;
+    :isOperational "true"^^xsd:boolean ;
+    sosa:observes :HomePowerConsumptionProperty .
+
+:HomePowerConsumptionProperty rdf:type :PowerConsumptionProperty ;
+    rdfs:label "Home Power Consumption" .
+
+# Lighting and power actuators
+:LivingRoomLight1 rdf:type :SmartLight ;
+    rdfs:label "Living Room Main Light" ;
+    :deviceLocatedIn :MyLivingRoom ;
+    :managedByHub :HomeHub1 ;
+    :hasPowerState "ON"^^xsd:string ;
+    :isOperational "true"^^xsd:boolean ;
+    sosa:actsOnProperty :LivingRoomLightLevel .
+
+:LivingRoomLightLevel rdf:type :LightLevelProperty ;
+    rdfs:label "Living Room Light Level" .
+
+:TVSmartPlug rdf:type :SmartPlug ;
+    rdfs:label "TV Smart Plug" ;
+    :deviceLocatedIn :MyLivingRoom ;
+    :managedByHub :HomeHub1 ;
+    :hasPowerState "ON"^^xsd:string ;
+    :isOperational "true"^^xsd:boolean ;
+    sosa:actsOnProperty :TVPowerSwitch .
+
+:TVPowerSwitch rdf:type :PowerSwitchProperty ;
+    rdfs:label "TV Power Switch" .
+
+:LivingRoomBlind rdf:type :SmartBlind ;
+    rdfs:label "Living Room Blind" ;
+    :deviceLocatedIn :MyLivingRoom ;
+    :managedByHub :HomeHub1 ;
+    :hasPowerState "ON"^^xsd:string ;
+    :isOperational "true"^^xsd:boolean ;
+    sosa:actsOnProperty :LivingRoomBlindPosition .
+
+:LivingRoomBlindPosition rdf:type :BlindPositionProperty ;
+    rdfs:label "Living Room Blind Position" .
+
+# Outdoor security
+:OutdoorCamera1 rdf:type :Camera ;
+    rdfs:label "Outdoor Camera" ;
+    :deviceLocatedIn :MyGarden ;
+    :managedByHub :HomeHub1 ;
+    :hasPowerState "ON"^^xsd:string ;
+    :isOperational "true"^^xsd:boolean ;
+    sosa:observes :MotionPropertyInstanceGarden .
+
+:MotionPropertyInstanceGarden rdf:type :MotionProperty ;
+    rdfs:label "Garden Motion" .
+
+# Irrigation
+:GardenIrrigationValve rdf:type :IrrigationValve ;
+    rdfs:label "Garden Irrigation Valve" ;
+    :deviceLocatedIn :MyGarden ;
+    :managedByHub :HomeHub1 ;
+    :hasPowerState "ON"^^xsd:string ;
+    :isOperational "true"^^xsd:boolean ;
+    sosa:actsOnProperty :GardenWateringSwitch .
+
+:GardenWateringSwitch rdf:type :PowerSwitchProperty ;
+    rdfs:label "Garden Watering Switch" .
+
+# Observations (examples)
+:SmokeObservation1 rdf:type sosa:Observation ;
+    rdfs:label "Kitchen Smoke Reading" ;
+    sosa:madeBySensor :KitchenSmokeDetector ;
+    sosa:hasFeatureOfInterest :MyKitchen ;
+    sosa:observedProperty :KitchenSmokeProperty ;
+    sosa:hasSimpleResult "0.7"^^xsd:float ;
+    :observationUnit "ppm" ;
+    :observationTimestamp "2024-01-15T23:10:00Z"^^xsd:dateTime .
+
+:COObservation1 rdf:type sosa:Observation ;
+    rdfs:label "Garage CO Reading" ;
+    sosa:madeBySensor :GarageCODetector ;
+    sosa:hasFeatureOfInterest :MyGarage ;
+    sosa:observedProperty :GarageCOProperty ;
+    sosa:hasSimpleResult "45.0"^^xsd:float ;
+    :observationUnit "ppm" ;
+    :observationTimestamp "2024-01-15T23:12:00Z"^^xsd:dateTime .
+
+:LeakObservation1 rdf:type sosa:Observation ;
+    rdfs:label "Bathroom Leak State" ;
+    sosa:madeBySensor :BathroomLeakDetector ;
+    sosa:hasFeatureOfInterest :MyBathroom ;
+    sosa:observedProperty :BathroomLeakProperty ;
+    sosa:hasSimpleResult "leak" ;
+    :observationTimestamp "2024-01-15T23:11:00Z"^^xsd:dateTime .
+
+:PowerObservation1 rdf:type sosa:Observation ;
+    rdfs:label "Home Power Consumption" ;
+    sosa:madeBySensor :MainEnergyMeter ;
+    sosa:hasFeatureOfInterest :MyHome ;
+    sosa:observedProperty :HomePowerConsumptionProperty ;
+    sosa:hasSimpleResult "1.85"^^xsd:float ;
+    :observationUnit "kW" ;
+    :observationTimestamp "2024-01-15T23:05:00Z"^^xsd:dateTime .
+
+# Alerts & Notifications (linked to observations)
+:FireAlert1 rdf:type :FireAlert ;
+    rdfs:label "Potential Fire in Kitchen" .
+
+:COAlert1 rdf:type :COAlert ;
+    rdfs:label "High CO in Garage" .
+
+:LeakAlert1 rdf:type :LeakAlert ;
+    rdfs:label "Water Leak in Bathroom" .
+
+:Notification1 rdf:type :Notification ;
+    rdfs:label "Push Notification" ;
+    :notificationChannel "push" ;
+    :messageText "ALERT: Smoke detected in kitchen." ;
+    :sentTo :Mohammad .
+
+:Notification2 rdf:type :Notification ;
+    rdfs:label "SMS Notification" ;
+    :notificationChannel "sms" ;
+    :messageText "ALERT: CO level high in garage." ;
+    :sentTo :Mohammad .
+
+:Notification3 rdf:type :Notification ;
+    rdfs:label "Push Notification" ;
+    :notificationChannel "push" ;
+    :messageText "ALERT: Leak detected in bathroom." ;
+    :sentTo :Mohammad .
+
+:SmokeObservation1 :triggersAlert :FireAlert1 .
+:COObservation1 :triggersAlert :COAlert1 .
+:LeakObservation1 :triggersAlert :LeakAlert1 .
+
+:FireAlert1 :generatesNotification :Notification1 .
+:COAlert1 :generatesNotification :Notification2 .
+:LeakAlert1 :generatesNotification :Notification3 .
+
+# Example actuations (responses)
+:LightDimActuation1 rdf:type sosa:Actuation ;
+    rdfs:label "Set Living Room Light to 30%" ;
+    sosa:madeByActuator :LivingRoomLight1 ;
+    sosa:hasFeatureOfInterest :MyLivingRoom ;
+    sosa:actsOnProperty :LivingRoomLightLevel ;
+    :actuationCommand "SET_LEVEL:30" ;
+    :actuationTimestamp "2024-01-15T23:00:00Z"^^xsd:dateTime .
+
+:TVPowerOffActuation1 rdf:type sosa:Actuation ;
+    rdfs:label "Turn Off TV Plug" ;
+    sosa:madeByActuator :TVSmartPlug ;
+    sosa:hasFeatureOfInterest :MyLivingRoom ;
+    sosa:actsOnProperty :TVPowerSwitch ;
+    :actuationCommand "SWITCH:OFF" ;
+    :actuationTimestamp "2024-01-15T23:01:00Z"^^xsd:dateTime .
+
+:CloseBlindActuation1 rdf:type sosa:Actuation ;
+    rdfs:label "Close Living Room Blind" ;
+    sosa:madeByActuator :LivingRoomBlind ;
+    sosa:hasFeatureOfInterest :MyLivingRoom ;
+    sosa:actsOnProperty :LivingRoomBlindPosition ;
+    :actuationCommand "SET_POSITION:0" ;
+    :actuationTimestamp "2024-01-15T23:02:00Z"^^xsd:dateTime .
+
+:IrrigationActuation1 rdf:type sosa:Actuation ;
+    rdfs:label "Start Garden Watering" ;
+    sosa:madeByActuator :GardenIrrigationValve ;
+    sosa:hasFeatureOfInterest :MyGarden ;
+    sosa:actsOnProperty :GardenWateringSwitch ;
+    :actuationCommand "SWITCH:ON" ;
+    :actuationTimestamp "2024-01-16T06:00:00Z"^^xsd:dateTime .
+
+# Lightweight automation examples (as individuals)
+:NightSecurityRule rdf:type :AutomationRule ;
+    rdfs:label "Night Security Rule" ;
+    :isEnabled "true"^^xsd:boolean ;
+    :rulePriority "10"^^xsd:integer .
+
+:NightCondition rdf:type :Condition ;
+    rdfs:label "Night time" ;
+    :comparisonOperator "=" ;
+    :thresholdValue "1.0"^^xsd:float .
+
+:LockAction rdf:type :Action ;
+    rdfs:label "Lock front door" ;
+    :targetsDevice :FrontDoorLock .
+
+:NightSecurityRule :hasCondition :NightCondition ;
+    :hasAction :LockAction .
+
+:MyHome :hasRule :NightSecurityRule .
