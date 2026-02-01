@@ -1,0 +1,623 @@
+@prefix : <http://www.semanticweb.org/iot-smart-home#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix ssn: <http://www.w3.org/ns/ssn/> .
+@prefix time: <http://www.w3.org/2006/time#> .
+
+<http://www.semanticweb.org/iot-smart-home> rdf:type owl:Ontology ;
+    owl:imports <http://www.w3.org/ns/sosa/> ,
+                <http://www.w3.org/ns/ssn/> ;
+    rdfs:label "Smart Home IoT Ontology" ;
+    rdfs:comment "A comprehensive Smart Home/IoT Ontology based on SOSA/SSN patterns with enhanced scalability by "Yazdan Bayat nezhad" for "knowledge Representation" course" ;
+    owl:versionInfo "2.2-fixed" .
+
+## 1. Enhanced Class Hierarchy with Proper SSN Alignment
+
+# Device Types (do not redefine SOSA classes)
+:Device rdf:type owl:Class ;
+    rdfs:subClassOf ssn:System ;
+    rdfs:label "IoT Device" ;
+    rdfs:comment "Base class for all IoT devices in the smart home." .
+
+:SensingDevice rdf:type owl:Class ;
+    rdfs:subClassOf :Device , sosa:Sensor ;
+    rdfs:label "Sensing Device" ;
+    rdfs:comment "A device capable of making observations." .
+
+:ActuatingDevice rdf:type owl:Class ;
+    rdfs:subClassOf :Device , sosa:Actuator ;
+    rdfs:label "Actuating Device" ;
+    rdfs:comment "A device capable of making actuations." .
+
+:CompositeDevice rdf:type owl:Class ;
+    rdfs:subClassOf :Device , sosa:Platform ;
+    rdfs:label "Composite Device" ;
+    rdfs:comment "A device that can host multiple sensors and/or actuators." .
+
+# Enhanced Spatial Hierarchy
+:BuildingComponent rdf:type owl:Class ;
+    rdfs:subClassOf sosa:FeatureOfInterest ;
+    rdfs:label "Building Component" ;
+    rdfs:comment "Physical component of a building structure." .
+
+:Structure rdf:type owl:Class ;
+    rdfs:subClassOf :BuildingComponent ;
+    rdfs:label "Structure" ;
+    rdfs:comment "Architectural structure element." .
+
+:Building rdf:type owl:Class ;
+    rdfs:subClassOf :Structure ;
+    rdfs:label "Building" .
+
+:Floor rdf:type owl:Class ;
+    rdfs:subClassOf :Structure ;
+    rdfs:label "Floor" .
+
+:Room rdf:type owl:Class ;
+    rdfs:subClassOf :Structure ;
+    rdfs:label "Room" .
+
+:Kitchen rdf:type owl:Class ;
+    rdfs:subClassOf :Room ;
+    rdfs:label "Kitchen" .
+
+:LivingRoom rdf:type owl:Class ;
+    rdfs:subClassOf :Room ;
+    rdfs:label "Living Room" .
+
+:Bedroom rdf:type owl:Class ;
+    rdfs:subClassOf :Room ;
+    rdfs:label "Bedroom" .
+
+:Bathroom rdf:type owl:Class ;
+    rdfs:subClassOf :Room ;
+    rdfs:label "Bathroom" .
+
+:Wall rdf:type owl:Class ;
+    rdfs:subClassOf :BuildingComponent ;
+    rdfs:label "Wall" .
+
+:Aperture rdf:type owl:Class ;
+    rdfs:subClassOf :BuildingComponent ;
+    rdfs:label "Aperture" ;
+    rdfs:comment "Opening in a structure (window, door, etc.)." .
+
+:Window rdf:type owl:Class ;
+    rdfs:subClassOf :Aperture ;
+    rdfs:label "Window" .
+
+:Door rdf:type owl:Class ;
+    rdfs:subClassOf :Aperture ;
+    rdfs:label "Door" .
+
+# Enhanced Sensor Taxonomy
+:EnvironmentalSensor rdf:type owl:Class ;
+    rdfs:subClassOf :SensingDevice ;
+    rdfs:label "Environmental Sensor" .
+
+:TemperatureSensor rdf:type owl:Class ;
+    rdfs:subClassOf :EnvironmentalSensor ;
+    rdfs:label "Temperature Sensor" .
+
+:HumiditySensor rdf:type owl:Class ;
+    rdfs:subClassOf :EnvironmentalSensor ;
+    rdfs:label "Humidity Sensor" .
+
+:AirQualitySensor rdf:type owl:Class ;
+    rdfs:subClassOf :EnvironmentalSensor ;
+    rdfs:label "Air Quality Sensor" .
+
+:LeakDetector rdf:type owl:Class ;
+    rdfs:subClassOf :EnvironmentalSensor ;
+    rdfs:label "Leak Detector" .
+
+:SmokeDetector rdf:type owl:Class ;
+    rdfs:subClassOf :EnvironmentalSensor ;
+    rdfs:label "Smoke Detector" .
+
+:SecuritySensor rdf:type owl:Class ;
+    rdfs:subClassOf :SensingDevice ;
+    rdfs:label "Security Sensor" .
+
+:MotionSensor rdf:type owl:Class ;
+    rdfs:subClassOf :SecuritySensor ;
+    rdfs:label "Motion Sensor" .
+
+:ContactSensor rdf:type owl:Class ;
+    rdfs:subClassOf :SecuritySensor ;
+    rdfs:label "Contact Sensor" .
+
+:Camera rdf:type owl:Class ;
+    rdfs:subClassOf :SecuritySensor ;
+    rdfs:label "Camera" .
+
+:GlassBreakSensor rdf:type owl:Class ;
+    rdfs:subClassOf :SecuritySensor ;
+    rdfs:label "Glass Break Sensor" .
+
+:EnergySensor rdf:type owl:Class ;
+    rdfs:subClassOf :SensingDevice ;
+    rdfs:label "Energy Sensor" .
+
+:PowerSensor rdf:type owl:Class ;
+    rdfs:subClassOf :EnergySensor ;
+    rdfs:label "Power Sensor" .
+
+:WaterFlowSensor rdf:type owl:Class ;
+    rdfs:subClassOf :EnergySensor ;
+    rdfs:label "Water Flow Sensor" .
+
+# Enhanced Actuator Taxonomy
+:LightingActuator rdf:type owl:Class ;
+    rdfs:subClassOf :ActuatingDevice ;
+    rdfs:label "Lighting Actuator" .
+
+:Switch rdf:type owl:Class ;
+    rdfs:subClassOf :LightingActuator ;
+    rdfs:label "Switch" .
+
+:Dimmer rdf:type owl:Class ;
+    rdfs:subClassOf :LightingActuator ;
+    rdfs:label "Dimmer" .
+
+:ClimateActuator rdf:type owl:Class ;
+    rdfs:subClassOf :ActuatingDevice ;
+    rdfs:label "Climate Actuator" .
+
+:Thermostat rdf:type owl:Class ;
+    rdfs:subClassOf :ClimateActuator ;
+    rdfs:label "Thermostat" .
+
+:HVACUnit rdf:type owl:Class ;
+    rdfs:subClassOf :ClimateActuator ;
+    rdfs:label "HVAC Unit" .
+
+:SecurityActuator rdf:type owl:Class ;
+    rdfs:subClassOf :ActuatingDevice ;
+    rdfs:label "Security Actuator" .
+
+:SmartLock rdf:type owl:Class ;
+    rdfs:subClassOf :SecurityActuator ;
+    rdfs:label "Smart Lock" .
+
+:Alarm rdf:type owl:Class ;
+    rdfs:subClassOf :SecurityActuator ;
+    rdfs:label "Alarm" .
+
+# Enhanced Appliance Hierarchy (can have both sensors and actuators)
+:SmartAppliance rdf:type owl:Class ;
+    rdfs:subClassOf :CompositeDevice ;
+    rdfs:label "Smart Appliance" ;
+    rdfs:comment "A composite device that may include both sensing and actuating capabilities." .
+
+:Refrigerator rdf:type owl:Class ;
+    rdfs:subClassOf :SmartAppliance ;
+    rdfs:label "Refrigerator" .
+
+:WashingMachine rdf:type owl:Class ;
+    rdfs:subClassOf :SmartAppliance ;
+    rdfs:label "Washing Machine" .
+
+:Dishwasher rdf:type owl:Class ;
+    rdfs:subClassOf :SmartAppliance ;
+    rdfs:label "Dishwasher" .
+
+:Oven rdf:type owl:Class ;
+    rdfs:subClassOf :SmartAppliance ;
+    rdfs:label "Oven" .
+
+
+## 2. Enhanced Object Properties
+
+# Spatial Relations
+# FIX: keep :isLocatedIn generic (NO transitive, NO domain/range)
+:isLocatedIn rdf:type owl:ObjectProperty ;
+    rdfs:label "is located in" ;
+    rdfs:comment "Generic location relation. Prefer :deviceLocatedIn for device-to-structure location; use :isPartOf for structure containment." .
+
+# FIX: new safe property for devices only
+:deviceLocatedIn rdf:type owl:ObjectProperty ;
+    rdfs:subPropertyOf :isLocatedIn ;
+    rdfs:domain :Device ;
+    rdfs:range :Structure ;
+    rdfs:label "device located in" ;
+    rdfs:comment "Indicates a device is physically located in a structure (room/floor/building). Use :isPartOf for structure containment." .
+
+# FIX: infer higher-level locations through containment (room partOf floor partOf building)
+:deviceLocatedIn owl:propertyChainAxiom ( :deviceLocatedIn :isPartOf ) .
+
+:isPartOf rdf:type owl:ObjectProperty , owl:TransitiveProperty ;
+    rdfs:domain :BuildingComponent ;
+    rdfs:range :BuildingComponent ;
+    rdfs:label "is part of" ;
+    rdfs:comment "Indicates spatial composition relationship." .
+
+:hasAperture rdf:type owl:ObjectProperty ;
+    owl:inverseOf :isApertureOf ;
+    rdfs:domain :Room ;
+    rdfs:range :Aperture ;
+    rdfs:label "has aperture" ;
+    rdfs:comment "Relates a room to its windows and doors." .
+
+:isApertureOf rdf:type owl:ObjectProperty ;
+    owl:inverseOf :hasAperture ;
+    rdfs:domain :Aperture ;
+    rdfs:range :Room ;
+    rdfs:label "is aperture of" .
+
+# Device Relations
+:hosts rdf:type owl:ObjectProperty ;
+    rdfs:subPropertyOf sosa:hosts ;
+    owl:inverseOf :isHostedBy ;
+    rdfs:domain :CompositeDevice ;
+    rdfs:range :Device ;
+    rdfs:label "hosts" ;
+    rdfs:comment "Indicates a composite device hosts another device." .
+
+:isHostedBy rdf:type owl:ObjectProperty ;
+    rdfs:subPropertyOf sosa:isHostedBy ;
+    owl:inverseOf :hosts ;
+    rdfs:domain :Device ;
+    rdfs:range :CompositeDevice ;
+    rdfs:label "is hosted by" .
+
+:connectedTo rdf:type owl:ObjectProperty , owl:SymmetricProperty ;
+    rdfs:domain :Device ;
+    rdfs:range :Device ;
+    rdfs:label "connected to" ;
+    rdfs:comment "Indicates network or logical connection between devices." .
+
+# Monitoring and Control Relations
+:monitors rdf:type owl:ObjectProperty ;
+    rdfs:domain :SecuritySensor ;
+    rdfs:range :BuildingComponent ;
+    rdfs:label "monitors" ;
+    rdfs:comment "Indicates a security sensor monitors a building component." .
+
+:controls rdf:type owl:ObjectProperty ;
+    rdfs:domain :ActuatingDevice ;
+    rdfs:range owl:Thing ;
+    rdfs:label "controls" ;
+    rdfs:comment "Indicates an actuator controls something." .
+
+# SOSA Observation and Actuation Relations
+:madeObservation rdf:type owl:ObjectProperty ;
+    rdfs:subPropertyOf sosa:madeObservation ;
+    rdfs:domain :SensingDevice ;
+    rdfs:range sosa:Observation ;
+    rdfs:label "made observation" .
+
+:madeActuation rdf:type owl:ObjectProperty ;
+    rdfs:subPropertyOf sosa:madeActuation ;
+    rdfs:domain :ActuatingDevice ;
+    rdfs:range sosa:Actuation ;
+    rdfs:label "made actuation" .
+
+
+## 3. Enhanced Data Properties
+
+# Device Metadata
+:hasManufacturer rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Device ;
+    rdfs:range xsd:string ;
+    rdfs:label "has manufacturer" .
+
+:hasModel rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Device ;
+    rdfs:range xsd:string ;
+    rdfs:label "has model" .
+
+:hasSerialNumber rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:domain :Device ;
+    rdfs:range xsd:string ;
+    rdfs:label "has serial number" .
+
+:hasIPAddress rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Device ;
+    rdfs:range xsd:string ;
+    rdfs:label "has IP address" .
+
+:hasMACAddress rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:domain :Device ;
+    rdfs:range xsd:string ;
+    rdfs:label "has MAC address" .
+
+# Device Status Properties
+:hasStatus rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:domain :Device ;
+    rdfs:range xsd:string ;
+    rdfs:label "has status" ;
+    rdfs:comment "General status description of the device." .
+
+# Fixed Power State Enumeration
+:PowerState rdf:type rdfs:Datatype ;
+    owl:equivalentClass [ rdf:type rdfs:Datatype ;
+                          owl:oneOf ( "ON"^^xsd:string "OFF"^^xsd:string "STANDBY"^^xsd:string )
+                        ] .
+
+:hasPowerState rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:domain :Device ;
+    rdfs:range :PowerState ;
+    rdfs:label "has power state" .
+
+:isOperational rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:domain :Device ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is operational" .
+
+# Observation Properties (properly modeled on Observation class)
+# FIX: align with SOSA hasSimpleResult
+:observationValue rdf:type owl:DatatypeProperty ;
+    rdfs:subPropertyOf sosa:hasSimpleResult ;
+    rdfs:domain sosa:Observation ;
+    rdfs:range xsd:float ;
+    rdfs:label "observation value" ;
+    rdfs:comment "Numeric value of an observation." .
+
+:observationUnit rdf:type owl:DatatypeProperty ;
+    rdfs:domain sosa:Observation ;
+    rdfs:range xsd:string ;
+    rdfs:label "observation unit" ;
+    rdfs:comment "Unit of measurement for the observation." .
+
+# FIX: align timestamps with sosa:resultTime
+:observationTimestamp rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:subPropertyOf sosa:resultTime ;
+    rdfs:domain sosa:Observation ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "observation timestamp" .
+
+# Actuation Properties
+:actuationCommand rdf:type owl:DatatypeProperty ;
+    rdfs:domain sosa:Actuation ;
+    rdfs:range xsd:string ;
+    rdfs:label "actuation command" ;
+    rdfs:comment "Command sent during actuation." .
+
+# FIX: align timestamps with sosa:resultTime
+:actuationTimestamp rdf:type owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:subPropertyOf sosa:resultTime ;
+    rdfs:domain sosa:Actuation ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "actuation timestamp" .
+
+
+## 4. Corrected Disjointness Axioms
+
+# Room types are disjoint
+[] rdf:type owl:AllDisjointClasses ;
+    owl:members ( :Kitchen :LivingRoom :Bedroom :Bathroom ) .
+
+# Aperture types are disjoint
+[] rdf:type owl:AllDisjointClasses ;
+    owl:members ( :Window :Door ) .
+
+# Basic sensor categories are disjoint
+[] rdf:type owl:AllDisjointClasses ;
+    owl:members ( :EnvironmentalSensor :SecuritySensor :EnergySensor ) .
+
+# Basic actuator categories are disjoint
+[] rdf:type owl:AllDisjointClasses ;
+    owl:members ( :LightingActuator :ClimateActuator :SecurityActuator ) .
+
+# Note: SensingDevice and ActuatingDevice are NOT disjoint
+# because CompositeDevices can have both capabilities
+
+
+## 5. Observable and Actuatable Properties
+
+:TemperatureProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ObservableProperty , sosa:Property ;
+    rdfs:label "Temperature Property" .
+
+:HumidityProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ObservableProperty , sosa:Property ;
+    rdfs:label "Humidity Property" .
+
+:AirQualityProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ObservableProperty , sosa:Property ;
+    rdfs:label "Air Quality Property" .
+
+:MotionProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ObservableProperty , sosa:Property ;
+    rdfs:label "Motion Property" .
+
+:ContactStateProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ObservableProperty , sosa:Property ;
+    rdfs:label "Contact State Property" .
+
+:PowerConsumptionProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ObservableProperty , sosa:Property ;
+    rdfs:label "Power Consumption Property" .
+
+:LightLevelProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ActuatableProperty , sosa:Property ;
+    rdfs:label "Light Level Property" .
+
+:TemperatureSetpointProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ActuatableProperty , sosa:Property ;
+    rdfs:label "Temperature Setpoint Property" .
+
+:LockStateProperty rdf:type owl:Class ;
+    rdfs:subClassOf sosa:ActuatableProperty , sosa:Property ;
+    rdfs:label "Lock State Property" .
+
+
+## 6. Enhanced Instantiation Examples
+
+# Building Structure
+:MyHome rdf:type :Building ;
+    rdfs:label "My Smart Home" .
+
+:MainFloor rdf:type :Floor ;
+    rdfs:label "Main Floor" ;
+    :isPartOf :MyHome .
+
+:MyKitchen rdf:type :Kitchen ;
+    rdfs:label "Main Kitchen" ;
+    :isPartOf :MainFloor .
+
+:MyLivingRoom rdf:type :LivingRoom ;
+    rdfs:label "Living Room" ;
+    :isPartOf :MainFloor .
+
+# Building Components
+:KitchenWindow rdf:type :Window ;
+    rdfs:label "Kitchen Window" ;
+    :isApertureOf :MyKitchen .
+
+:KitchenDoor rdf:type :Door ;
+    rdfs:label "Kitchen Door" ;
+    :isApertureOf :MyKitchen .
+
+:MyKitchen :hasAperture :KitchenWindow , :KitchenDoor .
+
+# Smart Appliance Example
+:FamilyFridge rdf:type :Refrigerator ;
+    rdfs:label "Family Refrigerator" ;
+    :deviceLocatedIn :MyKitchen ;
+    :hasManufacturer "Samsung" ;
+    :hasModel "RF28R7351SG" ;
+    :hasSerialNumber "SN123456789" ;
+    :hasPowerState "ON"^^xsd:string ;
+    :hasStatus "operating" ;
+    :isOperational "true"^^xsd:boolean .
+
+# Sensor hosted by appliance
+:FridgeTempSensor rdf:type :TemperatureSensor ;
+    rdfs:label "Fridge Temperature Sensor" ;
+    :isHostedBy :FamilyFridge ;
+    sosa:observes :FridgeTempProperty .
+
+# Observable Property Instance
+:FridgeTempProperty rdf:type :TemperatureProperty ;
+    rdfs:label "Fridge Internal Temperature" .
+
+# Observation Example (proper SOSA pattern)
+:FridgeObservation1 rdf:type sosa:Observation ;
+    rdfs:label "Fridge Temperature Reading 1" ;
+    sosa:madeBySensor :FridgeTempSensor ;
+    sosa:hasFeatureOfInterest :FamilyFridge ;
+    sosa:observedProperty :FridgeTempProperty ;
+    sosa:hasSimpleResult "4.2"^^xsd:float ;
+    :observationValue "4.2"^^xsd:float ;
+    :observationUnit "°C" ;
+    :observationTimestamp "2024-01-15T10:30:00Z"^^xsd:dateTime .
+
+# Security Sensor Example
+:WindowContactSensor rdf:type :ContactSensor ;
+    rdfs:label "Window Contact Sensor" ;
+    :deviceLocatedIn :MyKitchen ;
+    :monitors :KitchenWindow ;
+    :hasStatus "armed" ;
+    :isOperational "true"^^xsd:boolean ;
+    sosa:observes :WindowContactProperty .
+
+:WindowContactProperty rdf:type :ContactStateProperty ;
+    rdfs:label "Kitchen Window Contact State" .
+
+:WindowObservation1 rdf:type sosa:Observation ;
+    rdfs:label "Window Contact Reading 1" ;
+    sosa:madeBySensor :WindowContactSensor ;
+    sosa:hasFeatureOfInterest :KitchenWindow ;
+    sosa:observedProperty :WindowContactProperty ;
+    sosa:hasSimpleResult "closed" ;
+    :observationTimestamp "2024-01-15T10:30:00Z"^^xsd:dateTime .
+
+# Actuator Example
+:LivingRoomThermostat rdf:type :Thermostat ;
+    rdfs:label "Living Room Thermostat" ;
+    :deviceLocatedIn :MyLivingRoom ;
+    :hasManufacturer "Nest" ;
+    :hasModel "Learning Thermostat 3rd Gen" ;
+    :hasPowerState "ON"^^xsd:string ;
+    sosa:actsOnProperty :LivingRoomTempSetpoint .
+
+:LivingRoomTempSetpoint rdf:type :TemperatureSetpointProperty ;
+    rdfs:label "Living Room Temperature Setpoint" .
+
+# Actuation Example
+:ThermostatActuation1 rdf:type sosa:Actuation ;
+    rdfs:label "Set Temperature to 22°C" ;
+    sosa:madeByActuator :LivingRoomThermostat ;
+    sosa:hasFeatureOfInterest :MyLivingRoom ;
+    sosa:actsOnProperty :LivingRoomTempSetpoint ;
+    :actuationCommand "SET_TEMP:22" ;
+    :actuationTimestamp "2024-01-15T08:00:00Z"^^xsd:dateTime .
+
+# Smart Lock Example
+:FrontDoorLock rdf:type :SmartLock ;
+    rdfs:label "Front Door Smart Lock" ;
+    :deviceLocatedIn :MainFloor ;
+    :hasManufacturer "August" ;
+    :hasModel "Smart Lock Pro" ;
+    :hasPowerState "ON"^^xsd:string ;
+    :isOperational "true"^^xsd:boolean ;
+    sosa:actsOnProperty :FrontDoorLockState .
+
+:FrontDoorLockState rdf:type :LockStateProperty ;
+    rdfs:label "Front Door Lock State" .
+
+:LockActuation1 rdf:type sosa:Actuation ;
+    rdfs:label "Lock Front Door" ;
+    sosa:madeByActuator :FrontDoorLock ;
+    sosa:actsOnProperty :FrontDoorLockState ;
+    :actuationCommand "LOCK" ;
+    :actuationTimestamp "2024-01-15T22:00:00Z"^^xsd:dateTime .
+
+
+## 7. Annotation Properties for Better Documentation
+:hasDescription rdf:type owl:AnnotationProperty ;
+    rdfs:label "has description" ;
+    rdfs:comment "Provides a textual description of any entity." .
+
+:hasInstallationDate rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Device ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "has installation date" .
+
+:hasFirmwareVersion rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Device ;
+    rdfs:range xsd:string ;
+    rdfs:label "has firmware version" .
+
+
+## 8. Property Restrictions and Cardinality Constraints
+
+# A Room must have at least one aperture
+:Room rdfs:subClassOf [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasAperture ;
+                        owl:minCardinality "1"^^xsd:nonNegativeInteger
+                      ] .
+
+# A Sensor must observe at least one property
+:SensingDevice rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                 owl:onProperty sosa:observes ;
+                                 owl:minCardinality "1"^^xsd:nonNegativeInteger
+                               ] .
+
+# An Actuator must act on at least one property
+:ActuatingDevice rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                   owl:onProperty sosa:actsOnProperty ;
+                                   owl:minCardinality "1"^^xsd:nonNegativeInteger
+                                 ] .
+
+
+## 9. SWRL-style Rules (represented as comments for documentation)
+# These would be implemented in a reasoner that supports SWRL
+
+# Rule 1: If a window contact sensor observes "open" state during night hours, trigger security alert
+# [ContactSensor(?s), Window(?w), monitors(?s, ?w), Observation(?o),
+#  madeBySensor(?o, ?s), hasSimpleResult(?o, "open"), isNightTime(?o) -> SecurityAlert(?w)]
+
+# Rule 2: If temperature observation is above threshold, activate cooling
+# [TemperatureSensor(?s), Observation(?o), madeBySensor(?o, ?s),
+#  observationValue(?o, ?v), greaterThan(?v, 25), Room(?r), deviceLocatedIn(?s, ?r),
+#  Thermostat(?t), deviceLocatedIn(?t, ?r) -> activateCooling(?t)]
+
+# Rule 3: Infer device connectivity through common platform
+# [Device(?d1), Device(?d2), Platform(?p), isHostedBy(?d1, ?p),
+#  isHostedBy(?d2, ?p) -> connectedTo(?d1, ?d2)]
