@@ -1,58 +1,61 @@
-# IoT Smart Home Ontology
+# IoT Smart Home Ontology (SOSA/SSN)
 
-A comprehensive OWL ontology for modeling smart home Internet of Things (IoT) devices, sensors, actuators, and their interactions based on the SOSA/SSN (Sensor, Observation, Sample, and Actuator / Semantic Sensor Network) standards.
+A comprehensive OWL ontology for modeling smart home Internet of Things (IoT) environments (devices, sensors, actuators, spaces, events) **based on the W3C SOSA/SSN standards**.
 
 ---
 
 ## 🔍 Overview
 
-The **IoT Smart Home Ontology** provides a formal, machine-readable representation of smart home environments, including:
+The **IoT Smart Home Ontology** provides a formal, machine-readable representation of a smart home, including:
 
-- **Physical structures**: Buildings, floors, rooms, windows, doors
-- **IoT devices**: Sensors, actuators, smart appliances
-- **Observations**: Time-stamped sensor readings
-- **Actuations**: Control commands and device actions
-- **Relationships**: Device locations, connectivity, hosting
+- **Physical structures**: building, floors, rooms, windows/doors, and outdoor areas
+- **IoT devices**: sensors, actuators, smart appliances, and network/edge infrastructure (hub/router/voice assistant)
+- **Observations & actuations**: time-stamped sensor readings and control commands (SOSA pattern)
+- **Occupants & context**: residents/guests, occupancy, ownership
+- **Alerts & notifications**: safety/security events and who gets notified
+- **Automation rules**: lightweight representation of rules as individuals (conditions → actions)
 
-This ontology follows W3C's **SOSA/SSN** standards for semantic sensor networks, ensuring interoperability and best practices in IoT knowledge representation.
+This ontology aligns with W3C **SOSA/SSN** for interoperability and supports reasoning (e.g., location inference via property chains and transitive containment).
 
-### Use Cases
+### Typical Use Cases
 
-- Smart home automation systems
-- Energy management and monitoring
-- Home security systems
-- Environmental monitoring
-- IoT device integration and discovery
-- Semantic reasoning and rule-based automation
+- Smart home automation systems (rule-driven control)
+- Home security (contact/motion, lock, alerts, notifications)
+- Safety monitoring (smoke, leak, CO)
+- Energy monitoring and device inventory
+- Semantic IoT integration and device discovery
 - Research in smart buildings and ambient intelligence
 
 ---
 
-## ✨ Features
+## ✨ What’s Included
 
-- ✅ **SOSA/SSN Compliant**: Proper integration with W3C standards
-- ✅ **Comprehensive Device Taxonomy**: 30+ device types (sensors, actuators, appliances)
-- ✅ **Spatial Modeling**: Buildings, floors, rooms, and building components
-- ✅ **Temporal Data**: Timestamped observations and actuations
-- ✅ **Property Chains**: Automatic location inference through building hierarchy
-- ✅ **Rich Metadata**: Manufacturer, model, serial number, IP addresses
-- ✅ **Validated**: Tested with HermiT reasoner
+- ✅ **SOSA/SSN-aligned modeling** (Observation/Actuation patterns)
+- ✅ **Rich device taxonomy** (environmental, security, energy + actuators and appliances)
+- ✅ **Spatial modeling** (building → floor → room; apertures; outdoor area)
+- ✅ **Reasoning-friendly location modeling**
+  - `isPartOf` is transitive for containment
+  - `deviceLocatedIn` is safe and supports inference via a property chain
+- ✅ **Operational metadata** (manufacturer, model, serial, power state, operational status)
+- ✅ **Automation + alerting layer**
+  - `Alert` (security/fire/leak/CO) + `Notification` + `AutomationRule`
 
 ---
 
 ## 🏗️ Ontology Structure
 
-### Class Hierarchy
+### High-level Class Hierarchy (simplified)
 
 ```
-Device
-├── SensingDevice
+Device (⊑ ssn:System)
+├── SensingDevice (⊑ sosa:Sensor)
 │   ├── EnvironmentalSensor
 │   │   ├── TemperatureSensor
 │   │   ├── HumiditySensor
 │   │   ├── AirQualitySensor
 │   │   ├── LeakDetector
-│   │   └── SmokeDetector
+│   │   ├── SmokeDetector
+│   │   └── CarbonMonoxideDetector
 │   ├── SecuritySensor
 │   │   ├── MotionSensor
 │   │   ├── ContactSensor
@@ -60,103 +63,118 @@ Device
 │   │   └── GlassBreakSensor
 │   └── EnergySensor
 │       ├── PowerSensor
-│       └── WaterFlowSensor
-├── ActuatingDevice
+│       ├── WaterFlowSensor
+│       └── EnergyMeter
+├── ActuatingDevice (⊑ sosa:Actuator)
 │   ├── LightingActuator (Switch, Dimmer)
 │   ├── ClimateActuator (Thermostat, HVACUnit)
-│   └── SecurityActuator (SmartLock, Alarm)
-└── CompositeDevice
-    └── SmartAppliance
-        ├── Refrigerator
-        ├── WashingMachine
-        ├── Dishwasher
-        └── Oven
+│   ├── SecurityActuator (SmartLock, Alarm)
+│   ├── PowerActuator (SmartPlug)
+│   ├── ShadingActuator (SmartBlind)
+│   └── IrrigationValve
+└── CompositeDevice (⊑ sosa:Platform)
+    ├── SmartAppliance (Refrigerator, WashingMachine, Dishwasher, Oven)
+    └── NetworkDevice (Router, IoTHub, VoiceAssistant)
 
-BuildingComponent
-└── Structure
-    ├── Building
-    ├── Floor
-    └── Room (Kitchen, LivingRoom, Bedroom, Bathroom)
+BuildingComponent (⊑ sosa:FeatureOfInterest)
+├── Structure
+│   ├── Building
+│   ├── Floor
+│   ├── Room (Kitchen, LivingRoom, Bedroom, Bathroom, Hallway, Garage)
+│   └── OutdoorArea (Garden)
 └── Aperture (Window, Door)
+
+Occupant
+├── Resident
+└── Guest
+
+Alert
+├── SecurityAlert
+├── FireAlert
+├── LeakAlert
+└── COAlert
+
+AutomationRule
+├── Condition
+└── Action
 ```
 
 ### Key Object Properties
 
-- `deviceLocatedIn`: Links devices to rooms/structures
-- `isPartOf`: Building containment hierarchy
-- `hasAperture / isApertureOf`: Room-aperture relationships
-- `hosts / isHostedBy`: Composite device relationships
-- `monitors`: Security sensors → building components
-- `controls`: Actuators → controlled entities
-- `connectedTo`: Device network connections
+**Spatial & containment**
+- `isPartOf` (transitive): building component containment (room → floor → building)
+- `deviceLocatedIn`: **device → structure** location (safe, with inference via property chain)
+- `hasAperture / isApertureOf`: room ↔ window/door
+
+**Device relations**
+- `hosts / isHostedBy`: composite device hosting
+- `connectedTo`: symmetric device connectivity
+
+**Monitoring / control**
+- `monitors`: security sensor → building component
+- `controls`: actuator → controlled entity (generic)
+
+**Occupants & context**
+- `hasOccupant`: building → occupant
+- `occupies`: occupant → structure (current location)
+- `ownsDevice`: occupant → device
+
+**Alerts / notifications**
+- `triggersAlert`: observation → alert
+- `generatesNotification`: alert → notification
+- `sentTo`: notification → occupant
+
+**Automation**
+- `hasRule`: building → automation rule
+- `hasCondition`: rule → condition
+- `hasAction`: rule → action
+- `targetsDevice`: action → device
 
 ### Key Data Properties
 
-- Device Metadata: `hasManufacturer`, `hasModel`, `hasSerialNumber`, `hasIPAddress`
-- Device Status: `hasPowerState`, `isOperational`, `hasStatus`
-- Observation Data: `observationValue`, `observationUnit`, `observationTimestamp`
-- Actuation Data: `actuationCommand`, `actuationTimestamp`
+**Device metadata**
+- `hasManufacturer`, `hasModel`, `hasSerialNumber`
+- `hasIPAddress`, `hasMACAddress`
+
+**Device status**
+- `hasPowerState` (ON/OFF/STANDBY)
+- `isOperational` (boolean)
+- `hasStatus` (functional string)
+
+**Observation**
+- `observationValue` (subPropertyOf `sosa:hasSimpleResult`)
+- `observationUnit`
+- `observationTimestamp` (subPropertyOf `sosa:resultTime`)
+
+**Actuation**
+- `actuationCommand`
+- `actuationTimestamp` (subPropertyOf `sosa:resultTime`)
+
+**Automation**
+- `isEnabled`, `rulePriority`
+- `comparisonOperator`, `thresholdValue`
+- `notificationChannel`
 
 ---
 
 ## 🚀 Getting Started
 
-### Installation
+### Open in Protégé
 
-1. **Clone the repository**
-```bash
-git clone https://github.com/yourusername/iot-smart-home-ontology.git
-cd iot-smart-home-ontology
-```
-
-2. **Load the ontology**
-   - **In Protégé**: File → Open → Select `IOT-ontology.ttl`
-   - **In Apache Jena**: Use `riot` tool to validate syntax
-   ```bash
-   riot --validate IOT-ontology.ttl
-   ```
-
-3. **Load additional instances** (optional)
-```bash
-# Merge with critical instances
-cat IOT-ontology.ttl critical-objects-instances.ttl > complete-ontology.ttl
-```
-
-### Quick Validation
-
-**Verify syntax:**
-```bash
-rapper -i turtle -c IOT-ontology.ttl
-```
-
-**Run reasoner in Protégé:**
-1. Open the ontology in Protégé
-2. Reasoner → HermiT
-3. Start Reasoner
-4. Check for inconsistencies
-
-Expected output:
-```
-INFO  Running Reasoner
-INFO  Pre-computing inferences:
-      - class hierarchy ✓
-      - object property hierarchy ✓
-      - data property hierarchy ✓
-      - class assertions ✓
-      - object property assertions ✓
-      - same individuals ✓
-INFO  Ontologies processed in ~1200 ms by HermiT
-```
+1. File → Open → select `IOT-ontology.ttl`
+2. Start a reasoner:
+   - Reasoner → **HermiT** → Start Reasoner
+3. Check:
+   - Inferred class hierarchy
+   - Inferred `deviceLocatedIn` results (via property chain)
 
 ---
 
 ## 🔎 SPARQL Query Examples
 
-### Setup
+Use Protégé’s SPARQL tab or any SPARQL endpoint.
 
-Load the ontology into a SPARQL endpoint or use Protégé's SPARQL Query tab.
-
-**Prefix Declarations** (include at the start of each query):
+**Prefixes**
 ```sparql
 PREFIX : <http://www.semanticweb.org/iot-smart-home#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -165,110 +183,79 @@ PREFIX sosa: <http://www.w3.org/ns/sosa/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 ```
 
----
-
-### Query 1: Find All Devices and Their Types
-
-**Purpose**: Retrieve all IoT devices in the smart home with their labels and types.
-
+### Query 1: Inventory of devices and their locations
 ```sparql
-PREFIX : <http://www.semanticweb.org/iot-smart-home#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-
-SELECT ?device ?deviceLabel ?type
+SELECT ?device ?label ?roomLabel
 WHERE {
-  ?device rdf:type/rdfs:subClassOf* :Device .
-  ?device rdfs:label ?deviceLabel .
-  ?device rdf:type ?type .
-  FILTER(?type != owl:NamedIndividual)
+  ?device rdf:type/rdfs:subClassOf* :Device ;
+          rdfs:label ?label .
+  OPTIONAL {
+    ?device :deviceLocatedIn ?room .
+    ?room rdfs:label ?roomLabel .
+  }
+}
+ORDER BY ?label
+```
+
+### Query 2: Latest observations (value + unit + timestamp)
+```sparql
+SELECT ?obs ?label ?value ?unit ?t
+WHERE {
+  ?obs rdf:type sosa:Observation ;
+       rdfs:label ?label ;
+       sosa:hasSimpleResult ?value ;
+       :observationUnit ?unit ;
+       :observationTimestamp ?t .
+}
+ORDER BY DESC(?t)
+```
+
+### Query 3: Alerts and who gets notified
+```sparql
+SELECT ?alert ?alertLabel ?notif ?channel ?person ?personLabel
+WHERE {
+  ?alert rdf:type/rdfs:subClassOf* :Alert ;
+         rdfs:label ?alertLabel ;
+         :generatesNotification ?notif .
+  OPTIONAL { ?notif :notificationChannel ?channel }
+  ?notif :sentTo ?person .
+  OPTIONAL { ?person rdfs:label ?personLabel }
+}
+ORDER BY ?alertLabel
+```
+
+### Query 4: Devices hosted by the IoT hub
+```sparql
+SELECT ?hubLabel ?deviceLabel
+WHERE {
+  ?hub rdf:type :IoTHub ; rdfs:label ?hubLabel .
+  ?hub :hosts ?d .
+  ?d rdfs:label ?deviceLabel .
 }
 ORDER BY ?deviceLabel
 ```
 
 ---
 
-### Query 2: Find All Devices with Manufacturer and Model
+## 🧠 Reasoning Notes
 
-**Purpose**: Retrieve complete device inventory with metadata.
+### Location inference (property chain)
+`deviceLocatedIn` supports inference through containment:
 
-```sparql
-PREFIX : <http://www.semanticweb.org/iot-smart-home#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+- If a device is located in a room
+- and that room `isPartOf` a floor/building  
+then the reasoner can infer the device is also located in the higher-level structure.
 
-SELECT ?device ?deviceLabel ?manufacturer ?model ?serialNumber
-WHERE {
-  ?device rdf:type/rdfs:subClassOf* :Device .
-  ?device rdfs:label ?deviceLabel .
-  OPTIONAL { ?device :hasManufacturer ?manufacturer }
-  OPTIONAL { ?device :hasModel ?model }
-  OPTIONAL { ?device :hasSerialNumber ?serialNumber }
-}
-ORDER BY ?manufacturer
-```
+This keeps `isLocatedIn` generic while keeping `deviceLocatedIn` safe (no unintended domain/range side-effects).
 
 ---
 
-## 🧠 Reasoning & Validation
-
-### Running the Reasoner
-
-**In Protégé**:
-1. Open `IOT-ontology.ttl`
-2. Go to: Reasoner → HermiT (or Pellet)
-3. Click "Start Reasoner"
-4. Wait for completion (~1-2 seconds)
-5. Check: Reasoner → Explain Inconsistencies
-
-**Expected Output**:
-```
-INFO  22:18:12  Running Reasoner
-INFO  22:18:12  Pre-computing inferences:
-INFO  22:18:12      - class hierarchy ✓
-INFO  22:18:12      - object property hierarchy ✓
-INFO  22:18:12      - data property hierarchy ✓
-INFO  22:18:12      - class assertions ✓
-INFO  22:18:12      - object property assertions ✓
-INFO  22:18:12      - same individuals ✓
-INFO  22:18:13  Ontologies processed in 1185 ms by HermiT
-```
-
-### Validation Checklist
-
-- ✅ **No inconsistencies detected**
-- ✅ **No unsatisfiable classes**
-- ✅ **All individuals properly classified**
-- ✅ **Property domains and ranges respected**
-- ✅ **Cardinality constraints satisfied**
-- ✅ **Disjointness axioms hold**
-
-### Inferred Knowledge
-
-After reasoning, the ontology will infer:
-- **Transitive location relationships** (device → room → floor → building)
-- **Class memberships** (all parent classes for each instance)
-- **Property chain results** (deviceLocatedIn through building hierarchy)
-- **Inverse property assertions** (automatic bidirectional relationships)
-
----
-
-## 📁 Repository Structure
+## 📁 Repository Structure (suggested)
 
 ```
 iot-smart-home-ontology/
-├── README.md                          # This file
-├── IOT-ontology.ttl                   # Main ontology file
-├── critical-objects-instances.ttl     # Additional test instances
-├── sparql-queries-complete.txt        # 50+ SPARQL queries
-├── ontology-analysis-report.md        # Detailed analysis
-├── docs/
-│   ├── class-hierarchy.md             # Class documentation
-│   ├── properties.md                  # Property documentation
-│   └── use-cases.md                   # Usage examples
-├── examples/
-│   └── automation-rules.md            # Example automation scenarios
-└── tests/
-    ├── validation-tests.sparql        # Validation queries
-    └── consistency-checks.sparql      # Consistency tests
+├── README.md       # Main ontology + instances (v2.3-extended)
+├── IOT-ontology.ttl
+└── examples/
+    └── sparql/                      # Saved SPARQL queries (optional)
+```
