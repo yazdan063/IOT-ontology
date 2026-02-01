@@ -250,7 +250,7 @@ This keeps `isLocatedIn` generic while keeping `deviceLocatedIn` safe (no uninte
 
 ---
 
-## 📁 Repository Structure (suggested)
+## 📁 Repository Structure
 
 ```
 iot-smart-home-ontology/
